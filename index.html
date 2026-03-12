@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#000000">
+    <title>AR Solar System 🪐</title>
+    
+    <!-- Variant Launch WebXR SDK for iOS cross-platform AR support (no auto-redirect) -->
+    <script src="https://launchar.app/sdk/v1?key=enmBGWVPGN7oVMYedmZiuhSP5hnslAK7"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <div id="overlay">
+        
+        <header id="status-bar" class="hidden">
+            <div class="status-indicator">
+                <span class="pulse-dot"></span>
+                <span id="status-text">Scanning space coordinates...</span>
+            </div>
+        </header>
+
+        <div id="tracking-prompt" class="hidden">
+            <div class="tracking-prompt-box">
+                <div class="icon">⚠️</div>
+                <p id="tracking-prompt-text">Initializing Tracking...</p>
+            </div>
+        </div>
+
+        <div id="start-screen" class="panel">
+            <div class="header-icon">🌍</div>
+            <h1 class="title">Solar System AR</h1>
+            <p class="subtitle">Hold the universe in your room.</p>
+            <div class="loading-state" id="loading-container">
+                <div class="spinner"></div>
+                <p>Establishing Uplink</p>
+            </div>
+            
+            <div id="ar-button-container" class="hidden"></div>
+            
+            <button id="launch-ios-btn" class="ios-launch-btn hidden">
+                Initiate Launch Sequence
+            </button>
+            
+            <p class="warning" id="ar-warning" style="display: none;">WebXR AR is not supported on this device/browser.</p>
+        </div>
+
+        <div id="ar-instructions" class="hidden">
+            <div class="instruction-box">
+                <div class="icon">👆</div>
+                <p>Tap a flat surface to spawn the Solar System.<br>Tap any planet for info.</p>
+            </div>
+        </div>
+
+        <!-- Planet Info Card (Bottom) -->
+        <div id="info-card" class="hidden">
+            <h2 id="planet-name">Planet Name</h2>
+            <p id="planet-fact" class="fact">Did you know...</p>
+            <div class="properties-grid">
+                <div class="prop"><span class="label">Diameter</span><span id="planet-diameter" class="value">-</span></div>
+                <div class="prop"><span class="label">Orbit</span><span id="planet-orbit" class="value">-</span></div>
+            </div>
+        </div>
+
+        <div id="controls" class="hidden">
+            <button id="btn-clear" class="control-btn danger">🗑️ Clear Space</button>
+        </div>
+
+    </div>
+
+    <script type="module" src="/main.js"></script>
+</body>
+
+</html>
