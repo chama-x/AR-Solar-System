@@ -25,9 +25,6 @@ A high-fidelity augmented reality simulation designed to bring the celestial mec
 - **Styling**: Vanilla CSS3 with high-index glassmorphism
 - **Performance**: Vite-optimized production build
 
-### STUDENT IDENTITY
-**Index**: `ICT / 21 / 889`
-
 ---
 
 <div align="center">
