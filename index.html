@@ -19,6 +19,50 @@
 </head>
 
 <body>
+    <!-- Animated Intro Screen -->
+    <div id="intro-screen">
+        <div class="intro-content">
+            <div class="svg-container">
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <radialGradient id="sunGradient" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="#FFD700" />
+                            <stop offset="100%" stop-color="#FF8C00" />
+                        </radialGradient>
+                    </defs>
+                    <!-- Orbits -->
+                    <circle cx="100" cy="100" r="40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1" />
+                    <circle cx="100" cy="100" r="60" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1" />
+                    <circle cx="100" cy="100" r="80" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1" />
+                    
+                    <!-- Sun -->
+                    <circle cx="100" cy="100" r="18" fill="url(#sunGradient)">
+                        <animateTransform attributeName="transform" type="scale" values="1;1.1;1" dur="3s" repeatCount="indefinite" />
+                    </circle>
+                    
+                    <!-- Orbiting Planet 1 -->
+                    <g class="orbit-1">
+                        <circle cx="140" cy="100" r="6" fill="#4B70DD" />
+                    </g>
+                    <!-- Orbiting Planet 2 -->
+                    <g class="orbit-2">
+                        <circle cx="160" cy="100" r="4" fill="#E3BB76" />
+                    </g>
+                    <!-- Orbiting Planet 3 -->
+                    <g class="orbit-3">
+                        <circle cx="180" cy="100" r="5" fill="#2B82C9" />
+                    </g>
+                </svg>
+            </div>
+            <h1 class="intro-title">SOLAR EXPLORER</h1>
+            <div class="student-id">ICT / 21 / 889</div>
+            <div class="intro-loader">
+                <div class="loader-bar"></div>
+            </div>
+            <button id="enter-app-btn" class="enter-btn">ENTER UNIVERSE</button>
+        </div>
+    </div>
+
     <div id="overlay">
         
         <header id="status-bar" class="hidden">

@@ -21,8 +21,16 @@ let reticle;
 let solarSystemGroup = null; // Holds the entire solar system
 let planets = []; // Array of mesh objects for animation/raycasting
 
+// Interaction State
+let isDragging = false;
+let previousTouchPos = { x: 0, y: 0 };
+let initialPinchDistance = 0;
+let initialScale = 1;
+
 // UI Elements
 const ui = {
+    introScreen: document.getElementById('intro-screen'),
+    enterBtn: document.getElementById('enter-app-btn'),
     startScreen: document.getElementById('start-screen'),
     loadingContainer: document.getElementById('loading-container'),
     arButtonContainer: document.getElementById('ar-button-container'),
@@ -42,7 +50,20 @@ const ui = {
     pOrbit: document.getElementById('planet-orbit')
 };
 
+handleIntro();
 init();
+
+function handleIntro() {
+    // Show enter button after loading animation
+    setTimeout(() => {
+        ui.introScreen.classList.add('loaded');
+    }, 2500);
+
+    ui.enterBtn.addEventListener('click', () => {
+        ui.introScreen.classList.add('fade-out');
+        if (navigator.vibrate) navigator.vibrate(50);
+    });
+}
 
 function init() {
     scene = new THREE.Scene();
@@ -58,6 +79,8 @@ function init() {
     renderer.xr.enabled = true;
     
     document.body.appendChild(renderer.domElement);
+
+    addStarfield();
 
     // Variant Launch Initialization
     window.addEventListener('vlaunch-initialized', (event) => {
@@ -106,11 +129,27 @@ function setupNativeAR() {
     renderer.setAnimationLoop(animate);
     setupUIControls();
     setupRaycaster();
+    setupGestures();
 }
 
 function showARUnavailable() {
     ui.loadingContainer.style.display = 'none';
     ui.arWarning.style.display = 'block';
+}
+
+function addStarfield() {
+    const vertices = [];
+    for (let i = 0; i < 1500; i++) {
+        const x = THREE.MathUtils.randFloatSpread(10);
+        const y = THREE.MathUtils.randFloatSpread(10);
+        const z = THREE.MathUtils.randFloatSpread(10);
+        vertices.push(x, y, z);
+    }
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+    const material = new THREE.PointsMaterial({ color: 0xffffff, size: 0.015, transparent: true, opacity: 0.8 });
+    const points = new THREE.Points(geometry, material);
+    scene.add(points);
 }
 
 function setupReticle() {
@@ -247,6 +286,54 @@ function setupRaycaster() {
             // Tap empty space = hide card
             ui.infoCard.classList.add('hidden');
         }
+    });
+}
+
+function setupGestures() {
+    const domElement = renderer.domElement;
+
+    domElement.addEventListener('touchstart', (e) => {
+        if (!solarSystemGroup) return;
+
+        if (e.touches.length === 1) {
+            isDragging = false;
+            previousTouchPos = { x: e.touches[0].pageX, y: e.touches[0].pageY };
+        } else if (e.touches.length === 2) {
+            const dx = e.touches[0].pageX - e.touches[1].pageX;
+            const dy = e.touches[0].pageY - e.touches[1].pageY;
+            initialPinchDistance = Math.sqrt(dx * dx + dy * dy);
+            initialScale = solarSystemGroup.scale.x;
+        }
+    });
+
+    domElement.addEventListener('touchmove', (e) => {
+        if (!solarSystemGroup) return;
+
+        if (e.touches.length === 1) {
+            isDragging = true;
+            const deltaX = e.touches[0].pageX - previousTouchPos.x;
+            const deltaY = e.touches[0].pageY - previousTouchPos.y;
+
+            solarSystemGroup.rotation.y += deltaX * 0.01;
+            solarSystemGroup.rotation.x += deltaY * 0.01;
+
+            previousTouchPos = { x: e.touches[0].pageX, y: e.touches[0].pageY };
+        } else if (e.touches.length === 2) {
+            const dx = e.touches[0].pageX - e.touches[1].pageX;
+            const dy = e.touches[0].pageY - e.touches[1].pageY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            const scaleFactor = distance / initialPinchDistance;
+            let newScale = initialScale * scaleFactor;
+
+            // Clamping scale (0.1x to 5x)
+            newScale = Math.max(0.1, Math.min(newScale, 5.0));
+            solarSystemGroup.scale.set(newScale, newScale, newScale);
+        }
+    });
+
+    domElement.addEventListener('touchend', (e) => {
+        isDragging = false;
     });
 }
 
